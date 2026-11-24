@@ -23,8 +23,13 @@
     },
     {
       "path": "LICENSE",
-      "size_bytes": 22909,
-      "sha256": "28f2e13ba110ba9e45ba50e5c046e47fdde80ff2ab69463f0671b9d679a3225f"
+      "size_bytes": 22957,
+      "sha256": "07dbef636c00458b409fde36d37de879393bce35943f4118b0952089467d9136"
+    },
+    {
+      "path": "MANIFEST.json",
+      "size_bytes": 7192,
+      "sha256": "1b73e981a738a3f64d6e483ccac29cfaceb811674d753c67e912c4b8522cb9a2"
     },
     {
       "path": "README.md",

@@ -18,9 +18,9 @@ was cut to those parameters, so it slides in without adjustment.
 
 `backplate_rigid.stl` and `perimeter_TPU.stl` are one specific case: a **Galaxy
 S25 Ultra** shell, split by the agent pack's run. Use them as a check on your
-printer and your material before cutting a case of your own — a 12 minute
-perimeter and a 90 minute backplate will tell you more about your settings than
-any amount of previewing.
+printer and your material before cutting a case of your own — one perimeter and
+one backplate will tell you more about your settings and your TPU than any
+amount of previewing.
 
 The strap sits on the track floor at **Z +0.60 mm**. Its ears drop into the tracks
 from the phone-facing side; the phone closes them once it's in the case.
