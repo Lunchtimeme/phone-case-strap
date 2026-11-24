@@ -1,0 +1,71 @@
+{
+  "project": "Autonomous strap-housing installer for phone cases",
+  "version": "1.0",
+  "reference_phone": "Samsung Galaxy S25 Ultra",
+  "units": "mm",
+  "entry_point": "agent/agent.py",
+  "requirements": ["python3 (stdlib only)", "openscad on PATH"],
+  "drives": {
+    "split_cutter": "../Human_Kit/perimeter_split_negative.scad",
+    "strap_housing": "../Human_Kit/strap_housing_negative.scad",
+    "note": "The agent sets these SCAD files' parameters with -D overrides. It holds no copy of the joint geometry."
+  },
+  "pipeline": [
+    "repair: collapse zero-length non-manifold edges",
+    "measure: exterior back face, panel thickness, visible outline",
+    "fit: shrink the outline until the cut ring stays inside back-panel material",
+    "cut: render the Human Kit cutter and subtract it",
+    "split: extract perimeter and backplate as separate solids",
+    "housing: subtract strap_housing_negative.scad from the backplate",
+    "verify: component count, volume conservation, report.md and report.json"
+  ],
+  "measurement_methods": {
+    "back_face": "larger flat surface area at a Z extreme",
+    "panel_thickness": "median first-wall thickness over nine ray casts",
+    "visible_outline": "footprint of vertices within 0.5 mm of the back face",
+    "fitted_outline": "shrink until worst wall on the cut ring <= backplate_thickness + cut_end_overrun"
+  },
+  "reference_case": {
+    "file": "reference/case/s25UltraTHIKnoCutout.3mf",
+    "title": "S25 Ultra case with edge protection",
+    "author": "Alex (@alexm2901)",
+    "author_profile": "https://makerworld.com/en/@alexm2901",
+    "source": "https://makerworld.com/en/models/1183966-s25-ultra-case-with-edge-protection",
+    "licence": "CC BY-NC-SA 4.0",
+    "note": "Third-party model. Not the author's work. Included as a remix under the same licence, with attribution."
+  },
+  "reference_run": {
+    "output": "examples/s25-ultra-thik/",
+    "input_triangles": 7786,
+    "repairs": "2 degenerate edges collapsed (0.007 mm, 0.017 mm)",
+    "back_face_z": -2.8,
+    "panel_thickness_mm": 2.8,
+    "outline_measured_mm": [78.89, 164.09],
+    "outline_fitted_mm": [77.89, 163.09],
+    "parts_after_split": 2,
+    "perimeter_volume_mm3": 13913.9,
+    "backplate_volume_mm3": 27654.4,
+    "input_volume_mm3": 41573.4,
+    "housing_placement_xy": [38.8, 9.65],
+    "housing_removed_mm3": 8816.2
+  },
+  "spring_gaps": {
+    "human_kit_slicer_modifier_mm": 0.2,
+    "agent_output_mm": 0.2,
+    "analytic_cad_negative_mm": 0.4,
+    "note": "Three different artefacts. Never copy one value into another without regenerating and inspecting the bridge path."
+  },
+  "limitations": [
+    "No camera, button or port keep-out detection",
+    "Chamfer is a parameter (6.0 mm default), not measured",
+    "Strap is the Human Kit's 143.5 mm reference strap",
+    "No STEP export; OpenSCAD cannot",
+    "A clean boolean is not a fit test"
+  ],
+  "licence": {
+    "spdx": "CC-BY-NC-SA-4.0",
+    "commercial_use": false,
+    "share_alike": true,
+    "attribution": ["lunchtime", "Alex (@alexm2901)"]
+  }
+}

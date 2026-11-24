@@ -1,0 +1,217 @@
+{
+  "input": {
+    "file": "s25UltraTHIKnoCutout.3mf",
+    "bytes": 102070,
+    "verts": 3879,
+    "tris": 7770
+  },
+  "repair": {
+    "collapsed_edges": [
+      {
+        "vertices": [
+          2368,
+          2896
+        ],
+        "faces": 4,
+        "distance_mm": 0.0074
+      },
+      {
+        "vertices": [
+          976,
+          2531
+        ],
+        "faces": 4,
+        "distance_mm": 0.0165
+      }
+    ],
+    "warnings": [],
+    "boundary_edges": 0,
+    "non_manifold_edges": 0,
+    "triangles": 7770,
+    "vertices": 3877
+  },
+  "measurement": {
+    "back_face_z": -2.8,
+    "back_face_area_mm2": 10887.8,
+    "flipped": false,
+    "panel_thickness_mm": 2.8,
+    "thickness_probes": [
+      2.225,
+      2.8,
+      2.8,
+      2.8,
+      2.8,
+      2.8,
+      2.8,
+      2.8
+    ],
+    "outline_measured": {
+      "width": 78.89,
+      "height": 164.09,
+      "center_x": 38.8,
+      "center_y": 81.4
+    },
+    "outline_fitted": {
+      "width": 77.89,
+      "height": 163.09,
+      "max_wall_mm": 2.8
+    },
+    "fit_attempts": [
+      {
+        "width": 78.89,
+        "height": 164.09,
+        "max_wall_mm": 11.93
+      },
+      {
+        "width": 78.39,
+        "height": 163.59,
+        "max_wall_mm": 11.93
+      },
+      {
+        "width": 77.89,
+        "height": 163.09,
+        "max_wall_mm": 2.8
+      }
+    ]
+  },
+  "split": {
+    "parts": 2,
+    "perimeter": {
+      "bbox": {
+        "x": [
+          -3.15,
+          80.0
+        ],
+        "y": [
+          -2.4,
+          165.2
+        ],
+        "z": [
+          0.0,
+          11.93
+        ],
+        "size": [
+          83.15,
+          167.6,
+          11.93
+        ]
+      },
+      "volume_mm3": 13913.7
+    },
+    "backplate": {
+      "bbox": {
+        "x": [
+          0.28,
+          77.32
+        ],
+        "y": [
+          0.28,
+          162.52
+        ],
+        "z": [
+          0.0,
+          2.8
+        ],
+        "size": [
+          77.04,
+          162.24,
+          2.8
+        ]
+      },
+      "volume_mm3": 27654.0
+    },
+    "volume_conservation": 41567.7,
+    "input_volume_mm3": 42008.3
+  },
+  "housing": {
+    "negative_size": [
+      33.2,
+      145.7,
+      3.55
+    ],
+    "placement": {
+      "camera_end": "low",
+      "rotate_180": true,
+      "springs_local_end": "high",
+      "x_centre": 55.52,
+      "y_centre": 81.4,
+      "min_clearance": 2.14,
+      "rect": {
+        "x0": 38.91999999999999,
+        "x1": 72.11999999999999,
+        "y0": 8.550000000000011,
+        "y1": 154.25
+      },
+      "edge_gap": 5.2,
+      "opening_gaps": [
+        2.14
+      ]
+    },
+    "placed_rect": {
+      "x0": 38.92,
+      "x1": 72.12,
+      "y0": 8.550000000000011,
+      "y1": 154.25
+    },
+    "openings": [
+      {
+        "x0": 4.78,
+        "x1": 36.78,
+        "y0": 3.78,
+        "y1": 60.78,
+        "samples": 1772
+      }
+    ],
+    "clearance_to_openings": [
+      2.14
+    ],
+    "transform": {
+      "translate": [
+        55.52,
+        153.15,
+        0
+      ],
+      "rotate_z_deg": 180
+    },
+    "material_removed_mm3": 8720.0,
+    "parts_after_cut": 1
+  },
+  "outputs": [
+    "01_case_normalised.stl",
+    "02_cutter.stl",
+    "03_split.stl",
+    "04_perimeter.stl",
+    "05_backplate.stl",
+    "06_housing_negative.stl",
+    "README.md",
+    "report.json",
+    "report.md"
+  ],
+  "assumptions": [
+    "chamfer is a parameter (default 6.0 mm), not measured",
+    "the strap is the Human Kit's 143.5 mm reference strap unless you regenerate it",
+    "only the back panel is scanned for openings; side, button and port keep-outs are not",
+    "openings are approximated by their bounding rectangles, so reported clearances are conservative",
+    "the outline is auto-fitted to the flat back panel, which may be smaller than the visible outline"
+  ],
+  "log": [
+    "Human Kit   : /mnt/4TBHDD/3D Printing/Modely/Phone case S25U/Design by ChatGPT and me/Phone_Case_Public_Release_v2_3/Human_Kit",
+    "OpenSCAD    : /usr/sbin/openscad",
+    "case        : s25UltraTHIKnoCutout.3mf  3883 verts / 7786 tris",
+    "repair      : 2 degenerate edges collapsed, mesh is manifold",
+    "back face   : z=-2.80 (flat area 10888 mm2)",
+    "panel       : 2.80 mm thick (probes [2.225, 2.8, 2.8, 2.8, 2.8, 2.8, 2.8, 2.8])",
+    "outline     : 78.89 x 164.09 mm at (38.8, 81.4)",
+    "fitted      : 77.89 x 163.09 mm (worst wall on the cut ring 2.80 mm)",
+    "cutter      : 02_cutter.stl",
+    "split       : 2 parts",
+    "  perimeter : 83.15 x 167.60 x 11.93 mm, 13914 mm3",
+    "  backplate : 77.04 x 162.24 x 2.80 mm, 27654 mm3",
+    "opening 0   : x 4.78..36.78  y 3.78..60.78  (32.0 x 57.0 mm)",
+    "clear zone  : backplate inset by 5.2 mm (3.2 interlock + 2.0 margin)",
+    "camera end  : low  ->  springs at the top, housing rotated 180 deg",
+    "housing     : 33.2 x 145.7 mm at x 38.92..72.12, y 8.55..154.25",
+    "clearance   : 2.14 mm to the nearest opening/edge (gaps [2.14])",
+    "removed     : 8720 mm3, 1 part(s)"
+  ]
+}

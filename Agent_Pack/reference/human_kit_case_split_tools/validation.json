@@ -1,0 +1,116 @@
+{
+  "openscad_version": "2021.01",
+  "default_parameters": {
+    "split_boundary_width_mm": 80,
+    "split_boundary_height_mm": 160,
+    "split_corner_chamfer_mm": 6,
+    "backplate_thickness_mm": 2.65,
+    "joint_inner_inset_mm": 3.2,
+    "joint_middle_inset_mm": 1.65,
+    "joint_outer_inset_mm": 0.35,
+    "joint_lower_step_fraction": 0.32,
+    "joint_upper_step_fraction": 0.7,
+    "joint_radial_clearance_mm": 0.15,
+    "joint_vertical_clearance_mm": 0.08,
+    "cut_end_overrun_mm": 0.2
+  },
+  "checks": {
+    "all": {
+      "file": "profiled_perimeter_cut_full_ring.stl",
+      "watertight": true,
+      "components": 1,
+      "volume_mm3": 457.5542,
+      "bounds_mm": [
+        [
+          -39.725,
+          -79.725,
+          -0.2
+        ],
+        [
+          39.725,
+          79.725,
+          2.85
+        ]
+      ],
+      "expected_components": 1
+    },
+    "straight": {
+      "file": "profiled_perimeter_cut_straight_edges.stl",
+      "watertight": true,
+      "components": 4,
+      "volume_mm3": 408.516,
+      "bounds_mm": [
+        [
+          -39.725,
+          -79.725,
+          -0.2
+        ],
+        [
+          39.725,
+          79.725,
+          2.85
+        ]
+      ],
+      "expected_components": 4
+    },
+    "corners": {
+      "file": "profiled_perimeter_cut_chamfer_corners.stl",
+      "watertight": true,
+      "components": 4,
+      "volume_mm3": 49.0382,
+      "bounds_mm": [
+        [
+          -39.725,
+          -79.725,
+          -0.2
+        ],
+        [
+          39.725,
+          79.725,
+          2.85
+        ]
+      ],
+      "expected_components": 4
+    },
+    "boolean_test": {
+      "file": "profile_split_test_host.stl",
+      "watertight": true,
+      "components": 2,
+      "volume_mm3": 47269.5509,
+      "bounds_mm": [
+        [
+          -50.0,
+          -90.0,
+          0.0
+        ],
+        [
+          50.0,
+          90.0,
+          2.65
+        ]
+      ],
+      "expected_components": 2,
+      "component_volumes_mm3": [
+        16043.9808,
+        31225.5701
+      ]
+    },
+    "alternate_parameters": {
+      "test_dimensions_mm": {
+        "width": 92,
+        "height": 184,
+        "corner_chamfer": 8,
+        "backplate_thickness": 3.2
+      },
+      "watertight": true,
+      "components": 1,
+      "volume_mm3": 601.6982
+    }
+  },
+  "interpretation": {
+    "profile": "Five connected segments around the chamfered rectangle: inner vertical, upper shoulder, middle vertical, lower shoulder, outer vertical.",
+    "middle_band_material_sequence": "RIGID CORE | TPU TONGUE | RIGID RETAINING RAIL | TPU OUTER PERIMETER",
+    "note": "The cutter is the actual profiled negative-volume interface, not a thin straight slit. A real donor case still requires feature-clearance inspection and a successful Boolean subtraction."
+  },
+  "scope_note": "The boolean smoke test is a generic rectangular slab, not a phone case. It verifies the cutter creates two connected components in a simple host. It does not validate feature clearances or mechanical retention in an arbitrary donor case."
+}
