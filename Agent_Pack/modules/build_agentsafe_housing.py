@@ -34,13 +34,14 @@ Choose the gap for the target material and process, inspect the resulting
 beam, and test the detent physically. Do not assume the two negative volumes
 are geometrically interchangeable.
 
-PARAMETER SYNCHRONIZATION
--------------------------
-The geometry constants below are manually mirrored from
-`../reference/human_kit_parameters/strap_system_parameters.scad`; this script
-does not read that SCAD file at runtime. If shared dimensions change, update
-both places and compare the generated outputs. `SPRING_AIR_GAP=0.40` is an
-intentional override of the Human Kit's 0.20 mm default.
+PARAMETER SOURCING
+------------------
+The geometry parameters are read from the Human Kit's
+`strap_system_parameters.scad` at build time - the same file the SCAD models
+include - so the analytic STEP variant cannot drift away from them. Point
+`STRAP_PARAMETERS` at a different parameter file to build a variant.
+`SPRING_AIR_GAP=0.40` remains an intentional override of the Human Kit's 0.20 mm
+default, and the two are not interchangeable.
 
 All dimensions are in millimetres. Exterior back face is Z=0; +Z points toward
 the phone. The part is generated in strap-local coordinates: X is centred on
@@ -55,39 +56,96 @@ import Part
 from FreeCAD import Vector
 
 # --------------------------------------------------------------------------
-# Parameters. These are manually mirrored from
-# reference/human_kit_parameters/strap_system_parameters.scad.
-# They are NOT read from that file at runtime. Keep all geometry dimensions
-# synchronized if the strap is changed. SPRING_AIR_GAP=0.40 is intentional:
-# the Human Kit slicer modifier defaults to 0.20 mm.
+# Parameters: read from the Human Kit's shared parameter file at build time.
+#
+# There is one source of truth for these numbers - strap_system_parameters.scad.
+# This module evaluates that file's numeric assignments instead of carrying a
+# hand-copied set of constants, which is what let the analytic STEP variant drift
+# away from the SCAD version. If the file is missing, or a value cannot be
+# evaluated, the build stops rather than guessing.
+#
+# The three spring gaps remain deliberately different and are NOT unified:
+#   0.10 mm  integrated in the accepted S25 backplate, physically tested
+#   0.20 mm  Human Kit slicer modifier default (in the SCAD)
+#   0.40 mm  this analytic B-rep variant (below)
 # --------------------------------------------------------------------------
-STRAP_LENGTH = 143.50
-STRAP_FIXED_EAR_LENGTH = 10.00
-STRAP_MOVING_EAR_LENGTH = 15.80
-STRAP_FIXED_SOCKET_CLEARANCE = 0.35
-STRAP_TRAVEL = 33.00
-TRACK_HARD_STOP_OVERTRAVEL = 0.20
-STRAP_STOW_NOTCH_OFFSET = 2.80
+from pathlib import Path
 
-TRACK_CENTER_SPACING = 22.60
-TRACK_WIDTH = 7.20
-TRACK_FLOOR_THICKNESS = 0.60
-BACKPLATE_THICKNESS = 2.65
-NEGATIVE_CUT_OVERRUN = 0.55
-STRAP_WINDOW_WIDTH = 17.20
-STRAP_WINDOW_END_CLEARANCE = 1.10
-STRAP_WINDOW_CORNER_RADIUS = 2.50
 
-SPRING_BODY_WIDTH = 1.00
-SPRING_RELIEF_WIDTH = 0.70
-SPRING_BEAM_HALF_LENGTH = 10.00
-SPRING_RELIEF_HALF_LENGTH = 9.00
-SPRING_NOSE_HALF_LENGTH = 2.00
-SPRING_NOSE_DEPTH = 1.55
-SPRING_NOSE_SAMPLES = 24
+def _candidate_dirs():
+    """Where the parameter module might live, without relying on __file__."""
+    dirs = []
+    try:
+        dirs.append(Path(__file__).resolve().parent)
+    except NameError:
+        pass
+    dirs += [Path.cwd(), Path.cwd() / "modules", Path.cwd().parent / "modules"]
+    return dirs
 
-# --- the two fixes ---------------------------------------------------------
-# Deliberately more conservative B-rep variant; see the module README.
+
+def _load_scad_params():
+    """Import scad_params.py from beside this script.
+
+    FreeCADCmd does not put the script's directory on sys.path, so the module is
+    loaded by path rather than by name.
+    """
+    import importlib.util
+    tried = []
+    for d in _candidate_dirs():
+        cand = d / "scad_params.py"
+        tried.append(cand)
+        if cand.is_file():
+            spec = importlib.util.spec_from_file_location("scad_params", cand)
+            mod = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(mod)
+            return mod
+    raise RuntimeError("cannot find modules/scad_params.py; looked in:\n"
+                       + "\n".join(f"  {c}" for c in tried))
+
+
+scad_params = _load_scad_params()
+PARAMETERS = scad_params.Parameters(extra_dirs=_candidate_dirs())
+PARAMETERS_FILE = PARAMETERS.path
+UNRESOLVED = PARAMETERS.unresolved
+
+
+def P(name):
+    try:
+        return PARAMETERS[name]
+    except KeyError as e:
+        raise RuntimeError(str(e)) from None
+
+
+STRAP_LENGTH = P("strap_length")
+STRAP_BAND_WIDTH = P("strap_band_width")
+STRAP_EAR_WIDTH = P("strap_ear_width")
+STRAP_EAR_CENTER_SPACING = P("strap_ear_center_spacing")
+STRAP_FIXED_EAR_LENGTH = P("strap_fixed_ear_length")
+STRAP_MOVING_EAR_LENGTH = P("strap_moving_ear_length")
+STRAP_FIXED_SOCKET_CLEARANCE = P("strap_fixed_socket_clearance")
+STRAP_TRAVEL = P("strap_travel")
+TRACK_HARD_STOP_OVERTRAVEL = P("track_hard_stop_overtravel")
+STRAP_STOW_NOTCH_OFFSET = P("strap_stow_notch_offset")
+
+TRACK_CENTER_SPACING = P("track_center_spacing")
+TRACK_WIDTH = P("track_width")
+TRACK_FLOOR_THICKNESS = P("track_floor_thickness")
+BACKPLATE_THICKNESS = P("backplate_thickness")
+NEGATIVE_CUT_OVERRUN = P("negative_cut_overrun")
+STRAP_WINDOW_WIDTH = P("strap_window_width")
+STRAP_WINDOW_END_CLEARANCE = P("strap_window_end_clearance")
+STRAP_WINDOW_CORNER_RADIUS = P("strap_window_corner_radius")
+
+SPRING_BODY_WIDTH = P("spring_body_width")
+SPRING_RELIEF_WIDTH = P("spring_relief_width")
+SPRING_BEAM_HALF_LENGTH = P("spring_beam_half_length")
+SPRING_RELIEF_HALF_LENGTH = P("spring_relief_half_length")
+SPRING_NOSE_HALF_LENGTH = P("spring_nose_half_length")
+SPRING_NOSE_DEPTH = P("strap_detent_nose_depth")
+SPRING_NOSE_SAMPLES = int(P("spring_nose_samples"))
+
+# --- the two deliberate differences ---------------------------------------
+# More conservative B-rep variant; see the module README.
 SPRING_AIR_GAP = 0.40
 # How far the cavities reach past the keep-out boundary so no two faces are
 # exactly coincident. The keep-out trims this back; geometry is unaffected.
@@ -211,19 +269,21 @@ def selftest(neg):
         log("   %-34s %6.1f%% of the sample" % (tag, 100 * v / exp))
         return v / exp
 
-    # Probe X positions are derived, never hard-coded: fixed numbers silently
-    # pointed at empty space the moment the strap was narrowed.
+    # Probe positions are derived from the parameter set, never hard-coded:
+    # fixed numbers silently pointed at empty space the moment the strap changed.
     floor_x0 = STRAP_WINDOW_WIDTH / 2 + 0.3      # clear of the through-window
     floor_x1 = TRACK_OUTER_X - 0.2               # inside the track cavity wall
     beam_x0 = TRACK_OUTER_X + 0.05               # spring beam span
     beam_x1 = TRACK_OUTER_X + SPRING_BODY_WIDTH - 0.05
+    probe_y0 = SPRING_DETENT_Y - SPRING_BEAM_HALF_LENGTH + 2.0
+    probe_y1 = SPRING_DETENT_Y + SPRING_BEAM_HALF_LENGTH - 2.0
 
-    floor_ok = filled("track floor (below the gap)", floor_x0, floor_x1, 100, 110,
-                      0.05, TRACK_FLOOR_THICKNESS - 0.05)
-    gap_ok = filled("air gap under the spring", beam_x0, beam_x1, 100, 115,
-                    TRACK_FLOOR_THICKNESS + 0.03, GAP_TOP_Z - 0.03)
-    beam_ok = filled("spring beam (above the gap)", beam_x0, beam_x1, 100, 115,
-                     GAP_TOP_Z + 0.03, min(2.40, 4.0 - 0.1))
+    floor_ok = filled("track floor (below the gap)", floor_x0, floor_x1,
+                      probe_y0, probe_y1, 0.05, TRACK_FLOOR_THICKNESS - 0.05)
+    gap_ok = filled("air gap under the spring", beam_x0, beam_x1,
+                    probe_y0, probe_y1, TRACK_FLOOR_THICKNESS + 0.03, GAP_TOP_Z - 0.03)
+    beam_ok = filled("spring beam (above the gap)", beam_x0, beam_x1,
+                     probe_y0, probe_y1, GAP_TOP_Z + 0.03, min(2.40, 4.0 - 0.1))
     log("   nominal gap height = %.3f mm, beam height in a %.2f mm panel = %.3f mm"
         % (SPRING_AIR_GAP, BACKPLATE_THICKNESS, BACKPLATE_THICKNESS - GAP_TOP_Z))
     ok = floor_ok > 0.85 and gap_ok < 0.02 and beam_ok > 0.95

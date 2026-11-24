@@ -24,7 +24,7 @@ The negative is generated in strap-local coordinates:
 - X=0: strap-band centre;
 - Y=0: fixed end, +Y toward moving end.
 
-The housing footprint is approximately 33.2 x 145.7 mm. Place it on a clear rear-panel area and check cameras, rails, buttons, ports and outer skin thickness. The S25 placement values in the Agent Handoff are an example for that case only. The outer ~3.2 mm of a split backplate belongs to the vertical-capture interlock, so the usable flat area starts that far in.
+The housing footprint is approximately 32.4 x 145.7 mm. Place it on a clear rear-panel area and check cameras, rails, buttons, ports and outer skin thickness. The S25 placement values in the Agent Handoff are an example for that case only. The outer ~3.2 mm of a split backplate belongs to the vertical-capture interlock, so the usable flat area starts that far in.
 
 ## Rebuilding
 

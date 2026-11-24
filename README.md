@@ -66,7 +66,10 @@ Each package carries a manifest. From inside the package folder:
 sha256sum -c MANIFEST.sha256
 ```
 
-`Agent_Pack/MANIFEST.json` is the same inventory in machine-readable form (path, size, SHA-256), excluding both manifest files because a manifest cannot contain its own hash.
+`MANIFEST.sha256` covers every file in the package except itself, including
+`MANIFEST.json`. `Agent_Pack/MANIFEST.json` is the same inventory in
+machine-readable form (path, size, SHA-256) and excludes both manifest files,
+since it cannot contain its own hash.
 
 ## Printing
 

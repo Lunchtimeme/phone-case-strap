@@ -1,0 +1,39 @@
+name: tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  unit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Unit tests
+        working-directory: Agent_Pack
+        run: python -m unittest discover -s tests -v
+
+      - name: Package manifests verify
+        run: |
+          set -e
+          for pkg in Human_Kit Agent_Pack; do
+            echo "== $pkg =="
+            (cd "$pkg" && sha256sum -c MANIFEST.sha256)
+          done
+
+      # The SCAD parameters are the single source of truth; this proves the
+      # bundled copy in the Agent Pack has not drifted from the Human Kit.
+      - name: Bundled SCADs match the Human Kit
+        run: |
+          set -e
+          for f in perimeter_split_negative.scad strap_housing_negative.scad \
+                   strap_parametric.scad strap_system_parameters.scad; do
+            cmp "Human_Kit/$f" "Agent_Pack/human_kit/$f"
+          done
+          echo "bundled copies identical"

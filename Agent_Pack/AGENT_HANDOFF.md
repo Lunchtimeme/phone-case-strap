@@ -6,16 +6,17 @@
 
 The user has printed and assembled all three parts and reports that the strap/kickstand works exactly as intended: it supports the phone as a stand, does not twist, is comfortable to hold, and the TPU perimeter/backplate retention is secure enough to grab and gently wiggle the phone by the strap. Treat this as the final product. Do not redesign it without a concrete new failure report.
 
-Parts:
-1. `backplate.step/.stl` - rigid backplate with camera apertures, cosmetic hex window, phone-facing-open strap tracks, compliant detents and rigid half of the vertical-capture joint.
-2. `perimeter.step/.stl` - TPU perimeter with full-height case walls and matching captive return/tongue.
-3. `strap.step` and `strap_print_orientation.stl` - TPU band, four ears, detent notches and underside flex grooves.
+Parts produced by the pipeline (STL only):
 
-The assembly STEP/STL is for inspection only; print the three parts separately.
+1. `04_perimeter.stl` - TPU perimeter with full-height case walls and the matching captive return/tongue.
+2. `05_backplate.stl` - rigid backplate with the phone-facing-open strap tracks, compliant detents and the rigid half of the vertical-capture joint cut into it.
+3. `08_strap.stl` - TPU band, four ears, detent notches and underside flex grooves, generated from the same parameter set as the housing so the two always match.
+
+Print the three parts separately. There is no assembly file, and nothing here is printed as one solid. STEP export covers the housing negative only (`modules/strap_housing_negative_agentsafe.step`); the case parts are mesh-only, because OpenSCAD exports STL.
 
 ## Agent-safe negative volume for CAD booleans
 
-`modules/strap_housing_negative_agentsafe.step` is the housing negative to use whenever the housing will be subtracted in a CAD/B-rep kernel. `modules/build_agentsafe_housing.py` regenerates it and self-tests before writing. Its dimensions are manually mirrored from the Human Kit SCAD parameter file; they are not read from that file automatically. Keep them synchronized if the strap is edited.
+`modules/strap_housing_negative_agentsafe.step` is the housing negative to use whenever the housing will be subtracted in a CAD/B-rep kernel. `modules/build_agentsafe_housing.py` regenerates it and self-tests before writing. It reads its dimensions from `human_kit/strap_system_parameters.scad` at build time - the same file the SCAD models include - so it cannot drift out of step with them. Only the 0.40 mm spring gap is a deliberate local override; the Human Kit modifier keeps 0.20 mm.
 
 Do **not** subtract the Human Kit `strap_housing_negative.stl` (available in the separate Human Kit or the complete bundle) in CAD. It is a fine slicer modifier but unsafe boolean input: three pairs of faces are exactly coincident around the spring (track wall / keep-out / spring body at x = +/- track_outer_x; air-gap top / keep-out bottom at the same z; relief wall / keep-out outer wall at +/- 17.80). A boolean against it intermittently returns zero-area sliver faces, `isValid() == False` and a non-manifold STL, and the STL-to-solid conversion is itself not reproducible. See `history/CHANGELOG_v2_1.md` (included in this Agent Pack) for the measurements. The included agent-safe STEP was independently re-opened as one valid solid in the v2 audit. The original v2 audit report records six successful repeated subtractions; the bundled builder itself performs a slab self-test before writing. Re-run the builder and validate the target case boolean in the actual CAD kernel before relying on a new output.
 
@@ -36,7 +37,7 @@ Do not replace this with a horizontal Z-only split, shallow wedge, thin non-retu
 ## Strap and slider reference
 
 - TPU band: 16.60 mm wide x 143.50 mm long x 2.60 mm thick before grooves.
-- Four ears: 6.40 mm wide, 1.85 mm thick; fixed-end ear length 10.0 mm; moving-end ear length 15.8 mm. Ear centres at +/-10.90 mm; the tracks sit at +/-11.30 mm, 7.20 mm wide, for a 0.80 mm lateral clearance.
+- Four ears: 6.00 mm wide, 1.85 mm thick; fixed-end ear length 10.0 mm; moving-end ear length 15.8 mm. Ear centres at +/-10.90 mm; the tracks sit at +/-11.30 mm, 6.80 mm wide, for a 0.80 mm lateral clearance.
 - Travel to detent: 33.0 mm; ear hard stop about 0.20 mm beyond engagement.
 - Track floor: 0.60 mm.
 - Spring beam underside floats above the track floor, anchored at both ends. The beam body is flush with the track wall; only its rounded nose protrudes into the ear path.
@@ -67,7 +68,7 @@ This is the simplest path: keep the rigid case whole, subtract the strap housing
 
 Use `modules/strap_housing_negative_agentsafe.step`, not the Human Kit STL. It is generated in the strap datum the parameter file uses - exterior back at Z=0, X centred on the band, Y=0 at the fixed end - so for a case already built that way you only translate in X and Y.
 
-Practical placement, learned on the S25 Ultra minimalist shell: find the rear panel's inner floor and its camera openings, then place the 33.2 x 145.7 mm footprint in the clear strip - never centred. On that case the inner floor spans x 54.25..131.85 and the camera openings begin at x 95.57, so the housing went to x 56.41..93.41, y 52.21..197.91 - translate (74.91, 53.31, 0). That places the strap 18.15 mm off the panel centreline, which agrees with the 18.25 mm offset of the reference donor backplate. Narrowing the strap from the original 37 mm housing (band 19.60 -> 16.60, ears 7.10 -> 6.40) is what made the split-backplate example fit: the wider housing put one spring relief pocket into the interlock band and the other within 1.5 mm of the camera opening.
+Practical placement, learned on the S25 Ultra minimalist shell: find the rear panel's inner floor and its camera openings, then place the 32.4 x 145.7 mm footprint in the clear strip - never centred. On that case the inner floor spans x 54.25..131.85 and the camera openings begin at x 95.57, so the housing went to x 56.41..93.41, y 52.21..197.91 - translate (74.91, 53.31, 0). That places the strap 18.15 mm off the panel centreline, which agrees with the 18.25 mm offset of the reference donor backplate. Narrowing the strap from the original 37 mm housing (band 19.60 -> 16.60, ears 7.10 -> 6.00) is what made the split-backplate example fit: the wider housing put one spring relief pocket into the interlock band and the other within 1.5 mm of the camera opening.
 
 A reference copy of the case-independent Human Kit profiled split tool is included at `reference/human_kit_case_split_tools/`. It generates the complete five-segment vertical-capture negative-volume cutter from backplate width, height, corner chamfer and thickness; it is not a straight slit. The original Human Kit remains the publication-oriented source of truth. The cutter does not inspect arbitrary donor meshes or detect camera/button/port/rail keep-outs.
 

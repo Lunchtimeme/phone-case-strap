@@ -3,27 +3,51 @@
   "version": "1.0",
   "reference_phone": "Samsung Galaxy S25 Ultra",
   "units": "mm",
+  "coordinate_conventions": {
+    "case": "X/Y are the case in its own axes; Z=0 is the exterior back face, +Z points into the phone cavity",
+    "housing_rect": "axis-aligned rectangle in case coordinates; x0/y0 is the near corner, x1/y1 the far corner",
+    "housing_placement": "the rectangle, not a centre; the centre is ((x0+x1)/2, (y0+y1)/2)",
+    "strap_datum": "X centred on the band, Y=0 at the fixed end, Z=0 the exterior back face"
+  },
   "entry_point": "agent/agent.py",
   "requirements": ["python3 (stdlib only)", "openscad on PATH"],
   "drives": {
-    "split_cutter": "../Human_Kit/perimeter_split_negative.scad",
-    "strap_housing": "../Human_Kit/strap_housing_negative.scad",
-    "note": "The agent sets these SCAD files' parameters with -D overrides. It holds no copy of the joint geometry."
+    "bundled": "human_kit/ - the pack's own copy of the four SCAD files, used by default so the pack runs standalone",
+    "fallback": "../Human_Kit - used only if the bundled copy is absent",
+    "override": "--human-kit PATH",
+    "files": [
+      "human_kit/perimeter_split_negative.scad",
+      "human_kit/strap_housing_negative.scad",
+      "human_kit/strap_parametric.scad",
+      "human_kit/strap_system_parameters.scad"
+    ],
+    "note": "The agent sets these files' parameters with -D overrides and carries no copy of the geometry itself. When a sibling Human Kit is present, the bundle is compared against it and a divergence is reported as a warning."
   },
   "pipeline": [
-    "repair: collapse zero-length non-manifold edges",
+    "repair: collapse non-manifold edges no longer than --repair-tolerance, abort above it",
     "measure: exterior back face, panel thickness, visible outline",
     "fit: shrink the outline until the cut ring stays inside back-panel material",
     "cut: render the Human Kit cutter and subtract it",
-    "split: extract perimeter and backplate as separate solids",
-    "housing: subtract strap_housing_negative.scad from the backplate",
-    "verify: component count, volume conservation, report.md and report.json"
+    "split: extract perimeter and backplate, check the volume budget, validate both parts",
+    "strap: generate the strap from the same parameter set as the housing",
+    "housing: place it clear of openings, offset from the centreline and clear of the interlock, then subtract it",
+    "verify: component count, watertightness, volume budgets, report.md and report.json"
   ],
   "measurement_methods": {
     "back_face": "larger flat surface area at a Z extreme",
     "panel_thickness": "median first-wall thickness over nine ray casts",
     "visible_outline": "footprint of vertices within 0.5 mm of the back face",
-    "fitted_outline": "shrink until worst wall on the cut ring <= backplate_thickness + cut_end_overrun"
+    "fitted_outline": "shrink until worst wall on the cut ring <= backplate_thickness + cut_end_overrun",
+    "openings": "ray-parity scan of the back panel on a 0.6 mm grid, clustered; each bounding box is expanded by half a grid step because samples lie inside the hole",
+    "placement": "candidate search over the usable rectangle, scored on the tighter of opening clearance and interlock clearance"
+  },
+  "placement_rules": {
+    "opening_clearance_mm": 2.0,
+    "interlock_inset_mm": 3.2,
+    "edge_margin_mm": 2.0,
+    "min_offset_from_centre_mm": 6.0,
+    "why_offset": "The kickstand rests at two angles because the strap sits off the case centreline; centred, it stands at one. On a device with a camera cluster the offset also keeps the housing out of the openings.",
+    "no_openings": "A back panel with no through-openings is valid (not every device has a camera behind the case). The placement then relies on the offset alone, and --camera-end decides which way up the phone goes; without it the camera end is assumed 'low' and recorded as assumed."
   },
   "reference_case": {
     "file": "reference/case/s25UltraTHIKnoCutout.3mf",
@@ -37,30 +61,48 @@
   "reference_run": {
     "output": "examples/s25-ultra-thik/",
     "input_triangles": 7786,
-    "repairs": "2 degenerate edges collapsed (0.007 mm, 0.017 mm)",
+    "repairs": "2 degenerate edges collapsed (0.007 mm, 0.017 mm), max displacement 0.0165 mm",
     "back_face_z": -2.8,
     "panel_thickness_mm": 2.8,
     "outline_measured_mm": [78.89, 164.09],
     "outline_fitted_mm": [77.89, 163.09],
     "parts_after_split": 2,
-    "perimeter_volume_mm3": 13913.9,
-    "backplate_volume_mm3": 27654.4,
+    "perimeter_volume_mm3": 13913.7,
+    "backplate_volume_mm3": 27654.0,
     "input_volume_mm3": 41573.4,
-    "housing_placement_xy": [38.8, 9.65],
-    "housing_removed_mm3": 8816.2
+    "openings_detected": [
+      {"x0": 3.98, "x1": 37.58, "y0": 3.38, "y1": 61.58, "size_mm": [33.6, 58.2]}
+    ],
+    "housing_placement": {"x0": 39.72, "x1": 72.12, "y0": 8.55, "y1": 154.25},
+    "housing_size_mm": [32.4, 145.7],
+    "housing_removed_mm3": 8614.4,
+    "housing_clearance_to_openings_mm": [2.14],
+    "housing_clearance_to_interlock_mm": 5.2,
+    "housing_offset_from_centreline_mm": 17.12,
+    "strap_generated": {"size_mm": [27.4, 143.5, 2.6], "volume_mm3": 5922.3}
+  },
+  "strap_parameters": {
+    "band_width_mm": 16.6,
+    "ear_width_mm": 6.0,
+    "ear_band_overlap_mm": 0.6,
+    "track_lateral_clearance_mm": 0.8,
+    "derived": "ear centre spacing, track centre spacing, track width and strap window width all follow from the three values above, inside strap_system_parameters.scad",
+    "assertions": "the parameter file refuses to render when the ear/band overlap is under 0.4 mm, the track clearance is under 0.4 mm, or the window is narrower than the band"
   },
   "spring_gaps": {
+    "integrated_s25_backplate_mm": 0.1,
     "human_kit_slicer_modifier_mm": 0.2,
-    "agent_output_mm": 0.2,
     "analytic_cad_negative_mm": 0.4,
     "note": "Three different artefacts. Never copy one value into another without regenerating and inspecting the bridge path."
   },
   "limitations": [
-    "No camera, button or port keep-out detection",
+    "Through-openings are detected on the back panel only; side ports, buttons, raised camera islands and existing rails are not detected",
+    "Openings are approximated by expanded bounding rectangles, so clearances are conservative but the shapes are not modelled",
     "Chamfer is a parameter (6.0 mm default), not measured",
-    "Strap is the Human Kit's 143.5 mm reference strap",
-    "No STEP export; OpenSCAD cannot",
-    "A clean boolean is not a fit test"
+    "The main Python pipeline exports STL only; STEP export is a separate FreeCAD module (modules/build_agentsafe_housing.py) that builds the housing negative, not the case parts",
+    "A clean boolean is not a fit test",
+    "With no openings detected the camera end is assumed, not known",
+    "A case too narrow to offset the housing cannot give a two-angle stand"
   ],
   "licence": {
     "spdx": "CC-BY-NC-SA-4.0",

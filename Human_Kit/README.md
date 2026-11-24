@@ -1,13 +1,25 @@
 # Phone Case Strap
 
-**A sliding finger grip and kickstand for almost any phone case.**
+**A sliding finger grip and kickstand for phone cases with a flat, rigid rear panel.**
 
-This is a universal system that turns almost any phone case into one with a
-flexible holding strap that doubles as a kickstand. It's modelled on the strap
-Samsung builds into its S25 Ultra case: flush with the back when stowed,
-comfortable to hold one-handed, and a kickstand at two different angles when
-deployed. It slides on rails cut into the case, clicks into a detent when open,
-and stops before it can come out.
+This is a configurable system that turns a case into one with a flexible holding
+strap that doubles as a kickstand. It's modelled on the strap Samsung builds into
+its S25 Ultra case: flush with the back when stowed, comfortable to hold
+one-handed, and a kickstand at two different angles when deployed. It slides on
+rails cut into the case, clicks into a detent when open, and stops before it can
+come out.
+
+Two angles rather than one is not an accident of the design — it comes from the
+strap sitting **off the centre line of the case**, so the standing loop rests at a
+different pitch depending on which edge it leans on. That is why the housing is
+always placed to one side, and why a case too narrow to offset it will only stand
+at one angle. No camera is required: a plain panel works, and the tool supports
+cases with no openings at all.
+
+What it needs: a rear panel flat enough and rigid enough to take a 2.65 mm pocket
+and two spring beams, and roughly 33 mm × 146 mm of clear space for the housing.
+A soft or heavily sculpted back will not hold the slider — a full-TPU case was
+printed and tested and could not.
 
 I struggle with CAD and really only know how to use a slicer, so the strap system
 is built to need no CAD at all — route **A** below is two minutes in OpenSCAD and
@@ -94,7 +106,7 @@ smallest gap that prints free.
 | | |
 |---|---:|
 | Band | 143.50 × 16.60 × 2.60 mm |
-| Ears | 6.40 mm wide × 1.85 mm thick |
+| Ears | 6.00 mm wide × 1.85 mm thick |
 | Ear length, fixed / moving end | 10.0 / 15.8 mm |
 | Travel to detent | 33.0 mm |
 | Extra travel to hard stop | ~0.20 mm |
@@ -102,7 +114,7 @@ smallest gap that prints free.
 
 The transverse grooves make the band bend where it should without letting it
 twist. Ears narrower than this pull out of the track under load; wider ones stop
-the housing fitting between the camera cutout and the case edge. 6.40 mm is where
+the housing fitting between the camera cutout and the case edge. 6.00 mm is where
 those two limits meet on a large phone.
 
 ---

@@ -21,11 +21,16 @@ strap_thickness = 2.60;
 strap_corner_radius = 2.00;
 
 // Ears (two per end, one in each side track)
-// The ear must overlap the band to stay attached, so the ear centres follow the
-// band half-width: with a 16.60 band (half 8.30) and a 6.40 ear, the inner edge
-// sits at 7.70, giving 0.60 mm of overlap.
-strap_ear_width = 6.40;
-strap_ear_center_spacing = 21.80;  // centres at +/-10.90 from band centre
+// The ear must overlap the band to stay attached, so the ear centres are derived
+// from the band width rather than set independently: the inner edge of each ear
+// sits `strap_ear_band_overlap` inside the band edge. Narrowing the band
+// therefore brings the ears inboard with it, and the tracks follow from the ears
+// further down this file. Changing only strap_band_width is safe; changing
+// strap_ear_center_spacing by hand is not, and the assertion at the end of this
+// file rejects a strap whose ears would tear off the band.
+strap_ear_width = 6.00;
+strap_ear_band_overlap = 0.60;
+strap_ear_center_spacing = strap_band_width - 2*strap_ear_band_overlap + strap_ear_width;
 strap_ear_thickness = 1.85;
 strap_fixed_ear_length = 10.00;
 strap_moving_ear_length = 15.80;
@@ -61,7 +66,9 @@ track_width = strap_ear_width + strap_track_lateral_clearance;
 track_floor_thickness = 0.60;
 backplate_thickness = 2.65;
 negative_cut_overrun = 0.55; // extend cut past top surface for robust boolean subtraction
-strap_window_width = 17.20;
+// The window follows the band so a narrower strap cannot leave a gap either side.
+strap_window_side_clearance = 0.30;
+strap_window_width = strap_band_width + 2*strap_window_side_clearance;
 strap_window_end_clearance = 1.10;
 strap_window_corner_radius = 2.50;
 
@@ -110,3 +117,29 @@ strap_window_y0 = -strap_window_end_clearance;
 strap_window_y1 = strap_length + strap_window_end_clearance;
 track_fixed_socket_y0 = strap_fixed_ear_y0 - strap_fixed_socket_clearance;
 track_fixed_socket_y1 = strap_fixed_ear_y1 + strap_fixed_socket_clearance;
+
+// ---------------------------------------------------------------------------
+// Coupling assertions. These stop OpenSCAD with a readable message instead of
+// rendering a strap or housing that cannot work.
+// ---------------------------------------------------------------------------
+
+// The ear must overlap the band by enough material to survive being pulled.
+assert(strap_ear_band_overlap >= 0.40,
+       str("strap_ear_band_overlap is ", strap_ear_band_overlap,
+           " mm - the ears would tear off the band. Widen the band or narrow the ears."));
+assert(strap_ear_band_overlap < strap_ear_width,
+       "strap_ear_band_overlap must be smaller than strap_ear_width.");
+
+// A gap narrower than one extrusion width gets filled by the slicer and the ear
+// fuses to its track. 0.80 mm is two 0.40 mm passes.
+assert(strap_track_lateral_clearance >= 0.40,
+       str("strap_track_lateral_clearance is ", strap_track_lateral_clearance,
+           " mm - the ear would fuse to the track. Use at least 0.40, ideally 0.80."));
+assert(track_width > strap_ear_width,
+       "track_width must be wider than the ear.");
+
+// Geometry that would not resolve: the window must be at least as wide as the
+// band it shows. (The tracks deliberately overlap the window's X range - that is
+// where each ear joins the band - so there is nothing to assert there.)
+assert(strap_window_width >= strap_band_width,
+       "strap_window_width is narrower than the band.");

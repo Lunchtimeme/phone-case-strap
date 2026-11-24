@@ -1,5 +1,5 @@
 {
-  "file_count": 40,
+  "file_count": 47,
   "files": [
     {
       "path": "AGENTS.md",
@@ -8,8 +8,8 @@
     },
     {
       "path": "AGENT_HANDOFF.md",
-      "size_bytes": 10912,
-      "sha256": "5664f20266b0eac78aad7a8c2a5872c7f9076639285929afa410e8a278ced94f"
+      "size_bytes": 11247,
+      "sha256": "135413c790364ee1b10084532d01dde469b47b88979a188bfb5f998da0235a26"
     },
     {
       "path": "AUDIT_REPORT.md",
@@ -18,18 +18,13 @@
     },
     {
       "path": "CHANGELOG.md",
-      "size_bytes": 3833,
-      "sha256": "c4227f1f24d27cf1d0c67f3f810902c4bc233bc3ac7efa2b983ef434ebdca099"
+      "size_bytes": 6953,
+      "sha256": "c2f709b3294f1fe61956ff04d0e28a85e31509e0efbdff8322df7b66d13b8ea0"
     },
     {
       "path": "LICENSE",
       "size_bytes": 22957,
       "sha256": "07dbef636c00458b409fde36d37de879393bce35943f4118b0952089467d9136"
-    },
-    {
-      "path": "MANIFEST.json",
-      "size_bytes": 7192,
-      "sha256": "1b73e981a738a3f64d6e483ccac29cfaceb811674d753c67e912c4b8522cb9a2"
     },
     {
       "path": "README.md",
@@ -38,13 +33,13 @@
     },
     {
       "path": "agent/README.md",
-      "size_bytes": 6315,
-      "sha256": "f3cfe952532068a80232ae7a8a8aff3ae6bdfb611bb27c68bfc2a242b40795c9"
+      "size_bytes": 8106,
+      "sha256": "c1263dcb95d648656cfe41fe80bc89e52516ba26dadab0158452efd4b587bfa1"
     },
     {
       "path": "agent/agent.py",
-      "size_bytes": 39104,
-      "sha256": "f7adb921251b0bd77517843632ab7c4f3d4e6d26770f3f0e48da8e602f38edc6"
+      "size_bytes": 58736,
+      "sha256": "069404f9eeec4a9bb444dfabca0c4bcb7a126d5e36b4eac15534b0f82f24f926"
     },
     {
       "path": "docs/AGENT_HANDOFF.md",
@@ -78,28 +73,33 @@
     },
     {
       "path": "examples/s25-ultra-thik/05_backplate.stl",
-      "size_bytes": 69684,
-      "sha256": "08bf591aa79548f2b9186bd396d676d66fc34b88dd851c1fc008793953c2f4b3"
+      "size_bytes": 68084,
+      "sha256": "f6fc4beea301d4db8cd896a0d04d70b906b8a661f0d75cae5a14a6fdc8a834e7"
     },
     {
       "path": "examples/s25-ultra-thik/06_housing_negative.stl",
-      "size_bytes": 27084,
-      "sha256": "12243d434a9b688d4b754d74646a2b9aaeaae1537abe9d8aa2569e65bd69a8dc"
+      "size_bytes": 26284,
+      "sha256": "0610e75ccf036a33d618166030865d6d870a6e2515c7c6e572e4aff04edb1dea"
+    },
+    {
+      "path": "examples/s25-ultra-thik/08_strap.stl",
+      "size_bytes": 74084,
+      "sha256": "23b0e5299246ef5abf0ef17d6f32e360e2ea4c6cf4e9d99cec24500d850955c9"
     },
     {
       "path": "examples/s25-ultra-thik/README.md",
       "size_bytes": 4923,
-      "sha256": "6f3653795d3d0437c7cee7088cb5b2e0d80ffff0da0653cbc9aacedb12cd4da9"
+      "sha256": "b1cc7f7c8c70f2d9f1c3f0d4e65de078093acf2d67eaeea116524af8b314f88a"
     },
     {
       "path": "examples/s25-ultra-thik/report.json",
-      "size_bytes": 4961,
-      "sha256": "1baea8c8368518b76293a3d07db5a021dba35e8eeac120d3f8222001966340cd"
+      "size_bytes": 7210,
+      "sha256": "107727074eae7c0077ed08784cc1cd534aae993b18f1ef02f180d87296da9407"
     },
     {
       "path": "examples/s25-ultra-thik/report.md",
-      "size_bytes": 2230,
-      "sha256": "b09b3be45f094b18517ea5fac92fb91d7939a7c56da23825448e2b674d895043"
+      "size_bytes": 3029,
+      "sha256": "924a2d1b8ee02966f61b3d53eb3000893f8a95d9636d881b1b17d5f3a116e5f3"
     },
     {
       "path": "history/AUDIT_REPORT_v2_1.md",
@@ -112,29 +112,54 @@
       "sha256": "4a4c445d790083532ebb8bd8f817a53be7e707c7bd7aa89df3cbf0c7a4e6d2af"
     },
     {
+      "path": "human_kit/perimeter_split_negative.scad",
+      "size_bytes": 10657,
+      "sha256": "30e2f0de44e2b3a6a2cab3e13a185401b2b3245666eb2668e2df09f494e56624"
+    },
+    {
+      "path": "human_kit/strap_housing_negative.scad",
+      "size_bytes": 4629,
+      "sha256": "4204227c1a04c50522e4c3b6c11af5cb3020f3ac993bf4215fca374cc9785067"
+    },
+    {
+      "path": "human_kit/strap_parametric.scad",
+      "size_bytes": 3062,
+      "sha256": "37b6433df3fdbf14b6b771b3a118820a8c3f0b0e56299b01fb6fdd0bd4945b6a"
+    },
+    {
+      "path": "human_kit/strap_system_parameters.scad",
+      "size_bytes": 7411,
+      "sha256": "9da43e047874912d4dacec977e246128c0dfefbf7ec31caedda5931926ff1349"
+    },
+    {
       "path": "modules/README.md",
       "size_bytes": 3896,
-      "sha256": "64d6acd6cf127d07174b65c23470eb6b095ff7b7c26800399eb4fb73f4f7e393"
+      "sha256": "6933f7ac83dd0ef2e1adbb5ec2e64467d01e0495da5b0e2b7801626326c851c8"
     },
     {
       "path": "modules/build_agentsafe_housing.py",
-      "size_bytes": 12147,
-      "sha256": "2213a6ec28894b1bedd41946dc7046cfca1497231fc1f4010351ce8c43a785e1"
+      "size_bytes": 14697,
+      "sha256": "2c487ba7f8fb67cc56a775aacdf91fbfa591544eb1a1b8dd6a9fb066a17aa8ac"
+    },
+    {
+      "path": "modules/scad_params.py",
+      "size_bytes": 4637,
+      "sha256": "744a05a93018449bba436bae8164182b0891845fe6639859b90d973e5b6be805"
     },
     {
       "path": "modules/strap_housing_negative_agentsafe.step",
-      "size_bytes": 167316,
-      "sha256": "6ca65d6ce3a3ddcc7bf9c599af99e8115f9e6730605d28b12e36fb0f7b5ccd46"
+      "size_bytes": 167379,
+      "sha256": "046103e03796345212860c543b798e8cdeef2821e16292d2c4616df738cb30eb"
     },
     {
       "path": "modules/strap_housing_negative_agentsafe.stl",
       "size_bytes": 401780,
-      "sha256": "9fbf5d9207898c5084f1d3877bd2b1653d909cc4f6c577d115ec5c5e5f82523f"
+      "sha256": "76f8e3143d89a96d4bb304d2ad48a3fa84de80417a7b7534c51041f7e3ad7efa"
     },
     {
       "path": "project_context.json",
-      "size_bytes": 3057,
-      "sha256": "4a74f4afacb2fe6565119fcb67eef6f65769cba9f78b85ba865ace5431ebaa5c"
+      "size_bytes": 6478,
+      "sha256": "8235a31c29df682ce5837a9ae98a3060e2b6c0847ec2b72e996c091141ce2e58"
     },
     {
       "path": "reference/case/ATTRIBUTION.md",
@@ -205,6 +230,11 @@
       "path": "reference/human_kit_parameters/strap_system_parameters.scad",
       "size_bytes": 4768,
       "sha256": "bc226c2525f91d040f905f1c1363c4edadbe5ed6a69c52246d916ec296f63a9d"
+    },
+    {
+      "path": "tests/test_agent.py",
+      "size_bytes": 11481,
+      "sha256": "d6ed1dda0c3c6bde9f7e63a83ee68de8f763107faab23dab568bba4d6ef159eb"
     }
   ]
 }

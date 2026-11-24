@@ -6,22 +6,32 @@ where the strap goes, which way round, and whether it fits at all — is the par
 you (an agent or a person) are expected to make, and the script is built to
 refuse rather than guess when that judgement hasn't been made.
 
-It drives the Human Kit's own SCAD files
-(`perimeter_split_negative.scad`, `strap_housing_negative.scad`); it holds no
-copy of the joint geometry.
+It drives the Human Kit's own SCAD files (`perimeter_split_negative.scad`,
+`strap_housing_negative.scad`, `strap_parametric.scad`,
+`strap_system_parameters.scad`). The pack carries a byte-identical copy of them
+in `human_kit/` so it runs standalone; when a sibling `../Human_Kit/` is present
+the two are compared and any divergence is reported.
 
 ## The four decisions that matter
 
-### 1. Never centre the housing
+### 1. Offset the housing from the centreline
 
-A phone case is not a blank rectangle. It has a camera cluster cut clean through
-the back panel, usually 30-35 mm wide and 55-60 mm tall, sitting hard against
-one long edge. The strap housing is a **negative volume** — it is where the strap
-will live. If it overlaps the camera opening you get a part that cannot be
-assembled, and the boolean will still succeed and look clean. That is the single
-most expensive mistake in this workflow.
+Two reasons, and the first one is not about cameras at all:
 
-Find the openings, then offset the housing into the clear band beside them.
+- **The kickstand needs it.** The strap leans at two angles because it sits off
+  the centre of the case: the standing loop ends up nearer one edge than the
+  other, so it can rest at two different pitches. Centred, it stands at one.
+- **The camera needs it.** A phone case is rarely a blank rectangle: there is
+  usually a camera cluster cut clean through the back panel, 30-35 mm wide and
+  55-60 mm tall, hard against one long edge. The strap housing is a **negative
+  volume** — it is where the strap will live. Overlap the opening and you get a
+  part that cannot be assembled, while the boolean still succeeds and looks
+  clean.
+
+A case with no openings at all is legitimate — not every device has a camera
+behind the case — so an empty opening list is not an error. The offset rule still
+applies, which is precisely what stops the tool dropping a centred housing onto a
+blank panel.
 
 ### 2. Springs at the camera end
 
@@ -36,24 +46,31 @@ the part prints, the strap goes in, and it locks in the wrong position.
 
 ### 3. Clearance is the bridge of material left behind
 
-Keep at least **2.0 mm** between the housing rectangle and any opening, and
-2.0 mm from the backplate edge. That gap is the wall carrying load between two
-holes; below roughly 1.2 mm in rigid filament it becomes the place the part
-breaks.
+Keep at least **2.0 mm** between the housing rectangle and any opening, and keep
+the interlock band plus a margin (`--joint-inset` + `--edge-margin`, 5.2 mm by
+default) clear of every backplate edge. The gap between two holes is the wall
+carrying load; below roughly 1.2 mm in rigid filament it becomes the place the
+part breaks.
 
-The script measures clearance to the openings' bounding rectangles, which is
-deliberately conservative — real openings are rounded, so the true gap is
-usually a little larger than reported.
+Those are two separate constraints and the tool tracks them separately, on all
+four sides. The edge requirement is the stricter of the two because the outer
+3.2 mm of a split backplate is the interlock's retaining rail — cut into it and
+the perimeter comes off.
+
+The script measures clearance to the openings' bounding rectangles, expanded by
+half a sampling step, so the true gap is at least what it reports.
 
 ### 4. If it does not fit, narrow the strap
 
 The order of concessions:
 
 1. **Move** the housing within the clear band (the script searches this).
-2. **Narrow the strap** — reduce `strap_band_width` and `track_center_spacing` in
-   `strap_system_parameters.scad`, then regenerate the strap so the two still
-   match. This is the intended answer when the phone is small or the camera
-   cluster is wide.
+2. **Narrow the strap** — lower `strap_band_width` and/or `strap_ear_width`. The
+   ear centres, track spacing, track width and window all follow from those by
+   construction, and the agent regenerates the strap from the same values, so the
+   two parts cannot end up mismatched. `--strap-band-width` and
+   `--strap-ear-width` do exactly this. It is the intended answer when the phone
+   is small or the camera cluster is wide.
 3. **Lower the clearance**, and only with a reason. Say so in the report.
 
 Never widen the case to fit the strap, and never let the housing touch an
@@ -70,16 +87,17 @@ The tool exits non-zero and explains itself when the placement cannot satisfy
 the clearance rule, in this shape:
 
 ```
-no placement clears the case openings by 2.0 mm.
-  housing is 37.0 x 145.7 mm
-  best achievable clearance: 1.5 mm at x=56.78
-  widest housing that fits at 2.0 mm clearance: 36.5 mm
+no placement satisfies both constraints.
+  housing            : 32.4 x 145.7 mm
+  needed             : 2.0 mm to every opening, 5.2 mm to the interlock on all four sides
+  opening clearance  : 1.34 mm
+  edge clearance     : 5.2 mm
+  widest housing that fits at 2.0 mm: 32.5 mm
 ```
 
-(Those numbers are from the reference case *before* the strap was narrowed from
-a 37.0 mm to a 28.1 mm housing, which is exactly the decision this message asks
-for. With the narrowed strap it passes at the 2.0 mm default with 2.1 mm to
-spare.)
+(That is the real refusal from the reference case at a 33.2 mm housing — the
+shipped 32.4 mm housing is the answer to this message. Note that both numbers
+appear in it: the width that fails, and the width that would fit.)
 
 That is a decision point, not an error to work around. Either narrow the strap
 by the amount shown, or accept the smaller clearance deliberately and record
@@ -89,14 +107,19 @@ why.
 |---|---|
 | `--case PATH` | `.3mf` (single body) or `.stl` |
 | `--out DIR` | output directory (default `build/`) |
-| `--clearance MM` | minimum gap to any opening or edge (default 2.0) |
-| `--edge-margin MM` | minimum margin to the backplate edge (default 2.0) |
-| `--strap-band-width MM` | narrow the strap when it will not fit |
-| `--track-center-spacing MM` | narrow the tracks to match |
-| `--housing-x MM` | force the centre X — **only** after reading the clearances |
+| `--clearance MM` | minimum gap to any opening (default 2.0) |
+| `--joint-inset MM` | interlock band that must stay uncut (default 3.2) |
+| `--edge-margin MM` | margin beyond that band (default 2.0) |
+| `--min-offset MM` | how far off the centreline the housing must sit (default 6.0) — this is what gives the two kickstand angles |
+| `--camera-end low\|high` | which end the camera is on. Detected when there are openings; give it for a case with none |
+| `--strap-band-width MM` | narrow the strap. Applied to the strap **and** the housing together |
+| `--strap-ear-width MM` | change the ear width. Applied to both |
+| `--repair-tolerance MM` | largest non-manifold edge the repair may collapse (default 0.05); bigger ones abort |
+| `--housing-x MM` | force the centre X — the position is still checked against every constraint |
 | `--no-rotate` | keep the housing's native orientation |
 | `--chamfer MM` | corner chamfer for the split ring (default 6.0) |
-| `--human-kit PATH` | where the Human Kit lives (default `../Human_Kit`) |
+| `--human-kit PATH` | where the Human Kit lives (default: the copy bundled in `human_kit/`) |
+| `--mirror DIR` | copy the printable parts into a Human Kit `Examples/` folder |
 | `--no-housing` | split only |
 
 ## What the script measures

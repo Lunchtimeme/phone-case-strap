@@ -30,7 +30,7 @@ python3 agent/agent.py --case reference/case/s25UltraTHIKnoCutout.3mf \
 - back face at z = −2.80 mm, panel 2.80 mm thick
 - visible outline 78.89 × 164.09 mm, **fitted** to 77.89 × 163.09 mm
 - split into exactly 2 parts: 13914 mm³ + 27654 mm³ = the input's 41573 mm³
-- housing 33.2 × 145.7 mm, **8720 mm³** removed, backplate still one part
+- housing 32.4 × 145.7 mm, **8614 mm³** removed, backplate still one part
 
 The fitted outline is 1 mm smaller than the measured one because the case walls
 are 12 mm tall at the edge; a ring cut there leaves material above the cutter and
@@ -44,7 +44,7 @@ The back panel has one through-opening:
 |---|---|
 | opening 0 | x 4.78…36.78, y 3.78…60.78 — **32.0 × 57.0 mm**, the camera cluster |
 | camera end | low Y, so the springs face the top and the housing is **rotated 180°** |
-| housing rect | x 38.92…72.12, y 8.55…154.25 |
+| housing rect | x 39.72…72.12, y 8.55…154.25 |
 | clear zone | backplate inset 5.2 mm (3.2 interlock band + 2.0 margin) |
 | clearance to opening | **2.14 mm** |
 
@@ -76,14 +76,14 @@ The band was narrowed to 16.60 mm. The ears then have two opposing constraints:
 - **too narrow** and the strap pulls out of the track under load, which is a
   dropped phone.
 
-The working figure is **6.40 mm ears**, which is the widest that keeps the
-0.80 mm lateral clearance they need while the 33.2 mm housing still clears the
+The working figure is **6.00 mm ears**, which is the widest that keeps the
+0.80 mm lateral clearance they need while the 32.4 mm housing still clears the
 camera by 2.14 mm and the interlock band by 2.42 mm. That is below the original
 7.10 mm — the version that was actually tested in a case — so it stays inside
 known-good territory.
 
-Ear centres move with the band: 25.50 → 21.80 mm, tracks 26.00 → 22.60 mm at
-7.20 mm wide. A 6.40 mm ear needs its inner edge inside the 8.30 mm band
+Ear centres move with the band: 25.50 → 21.40 mm, tracks 26.00 → 22.20 mm at
+6.80 mm wide. A 6.00 mm ear needs its inner edge inside the 8.30 mm band
 half-width, so the centre spacing is capped at ~22.0 mm regardless.
 
 The 0.80 mm clearance is two 0.40 mm extrusion widths. Below one line width a
