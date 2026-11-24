@@ -436,3 +436,55 @@ public licenses.
 
 Creative Commons may be contacted at creativecommons.org.
 
+===============================================================================
+
+PROJECT NOTICE
+===============================================================================
+
+Phone case strap / kickstand project - Complete Project Kit 1.0
+
+Copyright (c) 2026 lunchtime
+
+This work is licensed under the Creative Commons
+Attribution-NonCommercial-ShareAlike 4.0 International License. You may copy,
+print, modify and redistribute it, provided you:
+
+  - give appropriate credit to the author (lunchtime) and link to the source
+    listing and to the license;
+  - indicate what you changed;
+  - do NOT use the material for commercial purposes; and
+  - distribute your contributions under the same CC BY-NC-SA 4.0 license.
+
+License summary, as shown on the publication page:
+
+  NO   sharing without ATTRIBUTION
+  NO   commercial use
+  YES  remix culture allowed
+  NO   free cultural works
+  NO   meets the Open Definition
+
+License deed:    https://creativecommons.org/licenses/by-nc-sa/4.0/
+Full legal code: https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
+
+CREDITS AND PROVENANCE
+The Agent Pack's S25 Ultra reference case geometry is derived from:
+
+  "S25 Ultra case with edge protection" by Alex (@alexm2901)
+  https://makerworld.com/en/models/1183966-s25-ultra-case-with-edge-protection
+  profile: https://makerworld.com/en/@alexm2901
+  licensed under CC BY-NC-SA 4.0
+
+Changes were made: the case was measured, the back panel was split from the
+perimeter with a parametric five-segment cutter, and a sliding strap housing
+was subtracted from the backplate. The original case design is not the
+author's work and is redistributed here only as a remix under the same
+licence, with attribution.
+
+SCOPE
+This license covers every file in this project - the original design work,
+source files, build tooling, documentation and the Agent Pack's remixed
+reference geometry. The reference case is included under the same
+CC BY-NC-SA 4.0 license as its source.
+
+The legal code above is the unmodified Creative Commons text and is
+authoritative. This notice is a summary for humans, not a substitute for it.
